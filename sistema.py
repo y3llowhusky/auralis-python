@@ -114,7 +114,7 @@ while True:
 2 - Visualizar histórico de registros
 3 - Enviar feedback
 4 - Visualizar histórico de feedbacks
-5 - Ativar notificações
+5 - Ativar / desativar notificações
 6 - Alterar senha do usuário             
 7 - Voltar para menu de login
 0 - Sair\n""")
@@ -151,7 +151,7 @@ while True:
 
             case "2":
                 limpar_tela()
-                exibir_titulo("visualizar registros diários")
+                exibir_titulo("visualizar histórico de registros")
                 input("Pressione Enter para continuar...")
 
             case "3":
@@ -161,12 +161,12 @@ while True:
 
             case "4":
                 limpar_tela()
-                exibir_titulo("visualizar feedbacks")
+                exibir_titulo("visualizar histórico de feedbacks")
                 input("Pressione Enter para continuar...")
 
             case "5":
                 limpar_tela()
-                exibir_titulo("ativar notificações")
+                exibir_titulo("ativar / desativar notificações")
                 input("Pressione Enter para continuar...")
 
             case "6":
