@@ -1,4 +1,5 @@
 from biblioteca import *
+from crud_usuarios import *
 
 while True:
 
@@ -23,21 +24,52 @@ while True:
             case "1":
                 limpar_tela()
                 exibir_titulo("cadastrar novo usuário")
+                email = input("Email: ")
+                senha = input("Senha: ")
+                if cadastrar_usuario(email, senha):
+                    print("Usuário cadastrado com sucesso!")
+                else:
+                    print("Erro: Usuário já existe.")
                 input("Pressione Enter para continuar...")
             case "2":
-                limpar_tela()
-                exibir_titulo("fazer login")
-                logando = False
-                executa_programa = True
-                input("Pressione Enter para continuar...")
+                while True:
+                    limpar_tela()
+                    exibir_titulo("fazer login")
+                    email = input("Email: ")
+                    senha = input("Senha: ")
+                    usuario_logado_id = verificar_login(email, senha)
+                    if usuario_logado_id:
+                        print("Login bem-sucedido!")
+                        logando = False
+                        executa_programa = True
+                        break
+                    else:
+                        print("Email ou senha incorretos. Tente novamente.")
+                    input("Pressione Enter para continuar...")
             case "3":
                 limpar_tela()
                 exibir_titulo("apagar usuário existente")
-                input("Pressione Enter para continuar...")
+                email = input("Email: ")
+                senha = input("Senha: ")
+                try:
+                    if apagar_usuario(email, senha):
+                        print("Usuário apagado com sucesso.")
+                    else:
+                        print("Erro: Usuário não encontrado ou senha incorreta.")
+                except Exception as e:
+                    exibir_titulo(f"erro: {e}")
+            case "0":
+                limpar_tela()
+                exibir_titulo("saindo do sistema...")
+                exit()
+            case _:
+                print("Opção inválida. Tente novamente.")
+
+        input("Pressione Enter para continuar...")
 
     while executa_programa:
         limpar_tela()
-        exibir_titulo("painel administrador auralis")
+        exibir_titulo("painel administrativo auralis")
         print("""1 - Adicionar registro diário
 2 - Visualizar registros diários
 3 - Enviar feedback
