@@ -11,15 +11,15 @@ usuario = {
 }
 
 # função para cadastro de usuário no banco de dados
-def cadastrar_usuario(email: str, senha: str) -> bool:
+def cadastrar_usuario(email: str, senha: str, nome_usuario: str, genero: str, data_nascimento: str) -> bool:
     select = "SELECT * FROM auralis_usuarios WHERE email = :1"
     resultado = executar_comando(select, {"1": email}, fetch=True)
 
     if resultado:
         return False
     else:
-        sql = "INSERT INTO auralis_usuarios (email, senha) VALUES (:1, :2)"
-        executar_comando(sql, {"1": email, "2": senha}, fetch=False)
+        sql = "INSERT INTO auralis_usuarios (email, senha, nome_usuario, genero, data_nascimento) VALUES (:1, :2, :3, :4, TO_DATE(:5, 'DD/MM/YYYY'))"
+        executar_comando(sql, {"1": email, "2": senha, "3": nome_usuario, "4": genero, "5": data_nascimento}, fetch=False)
         return True
 
 # função para apagar um usuário do banco, através da opção 3 do menu de email no sistema principal. Retorna booleano de acordo com sucesso ou fracasso da solicitação
@@ -35,6 +35,14 @@ def apagar_usuario(email, senha) -> bool:
     delete = "DELETE FROM auralis_usuarios WHERE id_usuario = :1"
     executar_comando(delete, {"1": id_usuario}, fetch=False)
 
+    return True
+
+# função para verificar se email já está em algum cadastro do banco de dados
+def verificar_usuario_novo(email: str) -> bool:
+    sql = "SELECT * FROM auralis_usuarios WHERE email = :1"
+    resultado = executar_comando(sql, {"1": email}, fetch=True)
+    if resultado:
+        return False
     return True
 
 # função para verificar se email e senha digitados correspondem a algum valor no banco de dados
@@ -67,3 +75,4 @@ def atualizar_senha(id_usuario: int, senha_atual: str, nova_senha: str) -> None:
         sql_atualiza = "UPDATE auralis_usuarios SET senha = :1 WHERE id_usuario = :2"
         executar_comando(sql_atualiza, {"1": nova_senha, "2": id_usuario}, fetch=False)
         return True
+    

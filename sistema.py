@@ -25,11 +25,39 @@ while True:
                 limpar_tela()
                 exibir_titulo("cadastrar novo usuário")
                 email = input("Email: ")
+                if not validar_campo("email", email):
+                    print("Erro: Email inválido.")
+                    input("Pressione Enter para continuar...")
+                    continue
+                elif not verificar_usuario_novo(email):
+                    print("Erro: Usuário já existe.")
+                    input("Pressione Enter para continuar...")
+                    continue
                 senha = input("Senha: ")
-                if cadastrar_usuario(email, senha):
+                if not validar_campo("senha", senha):
+                    print("Erro: Senha inválida. A senha deve ter pelo menos 6 caracteres.")
+                    input("Pressione Enter para continuar...")
+                    continue
+                nome_usuario = input("Nome: ")
+                if not validar_campo("nome", nome_usuario):
+                    print("Erro: Nome inválido. O nome deve ter pelo menos 2 caracteres.")
+                    input("Pressione Enter para continuar...")
+                    continue
+                genero = input("Gênero ( [M]asculino, [F]eminino, [O]utro ): ")
+                if not validar_campo("genero", genero):
+                    print("Erro: Gênero inválido. Use M, F ou O.")
+                    input("Pressione Enter para continuar...")
+                    continue
+                data_nascimento = "placeholder"
+                while not validar_campo("data_nascimento", data_nascimento):
+                    data_nascimento = input("Data de Nascimento (DD/MM/AAAA): ")
+                    if not validar_campo("data_nascimento", data_nascimento):
+                        print("Erro: Data de nascimento inválida.")
+                        input("Pressione Enter para continuar...")
+                if cadastrar_usuario(email, senha, nome_usuario, genero, data_nascimento):
                     print("Usuário cadastrado com sucesso!")
                 else:
-                    print("Erro: Usuário já existe.")
+                    print("Erro ao cadastrar usuário.")
                 input("Pressione Enter para continuar...")
             case "2":
                 while True:
@@ -45,7 +73,7 @@ while True:
                         break
                     else:
                         print("Email ou senha incorretos. Tente novamente.")
-                    input("Pressione Enter para continuar...")
+                input("Pressione Enter para continuar...")
             case "3":
                 limpar_tela()
                 exibir_titulo("apagar usuário existente")
@@ -58,14 +86,14 @@ while True:
                         print("Erro: Usuário não encontrado ou senha incorreta.")
                 except Exception as e:
                     exibir_titulo(f"erro: {e}")
+                input("Pressione Enter para continuar...")
             case "0":
                 limpar_tela()
                 exibir_titulo("saindo do sistema...")
                 exit()
             case _:
                 print("Opção inválida. Tente novamente.")
-
-        input("Pressione Enter para continuar...")
+                input("Pressione Enter para continuar...")
 
     while executa_programa:
         limpar_tela()
