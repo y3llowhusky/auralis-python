@@ -14,6 +14,7 @@ def exibir_titulo(title: str) -> None:
     print(title.center(largura).upper())
     print("=" * largura)
 
+# função para verificar se data está em formato e intervalo válidos
 def verificar_data(data_texto: str) -> bool:
     try:
         data_valida = datetime.strptime(data_texto, "%d/%m/%Y")
@@ -22,7 +23,8 @@ def verificar_data(data_texto: str) -> bool:
         return False
     except ValueError:
         return False
-    
+
+# função para validar dados inseridos pelo usuário de acordo com o campo
 def validar_campo(campo: str, valor: str) -> bool:
     match campo:
         case "email":
@@ -35,3 +37,65 @@ def validar_campo(campo: str, valor: str) -> bool:
             return valor.upper() in ["M", "F", "O"]
         case "data_nascimento":
             return verificar_data(valor)
+        case "hidratacao (ml)":
+            return valor >= 0 and valor <= 10000
+        case "tempo sol (min)":
+            return valor >= 0 and valor <= 1440
+        case "nivel estresse (1 a 10)":
+            return valor >= 1 and valor <= 10
+        case "sono (horas)":
+            return valor >= 0 and valor <= 24
+        case "tempo tela (horas)":
+            return valor >= 0 and valor <= 24
+        case "trabalho (horas)":
+            return valor >= 0 and valor <= 24
+        case "atividade fisica (min)":
+            return valor >= 0 and valor <= 1440
+        
+# procedimento para preencher um dicionario e adiciona-lo a lista de dicionarios
+def preencher_dicionario(dicionario: dict) -> None:
+    # preenche os values dos items do dicionario e adiciona o dicionario preenchido na lista de dicionarios
+    for campo, valor in dicionario.items():
+        campo_valido = False
+        while not campo_valido:
+            valor = input(f'{campo.upper()}: ')
+
+            # verifica se valor digitado é vazio
+            if valor.strip() == '':
+                print('Campo em branco! Digite um valor válido.')
+            else:
+                tipo = verificar_tipo(campo)
+                
+                # converte conteudo digitado para o tipo esperado para aquele campo, se possivel
+                try:
+                    # converte o conteúdo do campo para o tipo esperado dele
+                    valor = tipo(valor)
+                    
+                    # verifica se campo é válido através do retorno da função validar_campo (bool)
+                    campo_valido = validar_campo(campo, valor)
+                    
+                    # se campo não for valido, permanece no loop, se for valido, flag é automaticamente desativada
+                    if not campo_valido:
+                        print(f'Digite valor válido para {campo}!')
+                    
+                except ValueError:
+                    print(f'Digite valor válido para {campo}!')
+        
+        # atribui conteudo do campo ao valor do item no dicionario
+        dicionario[campo] = valor
+
+# função para verificar o tipo esperado do conteúdo de um campo, retorna o tipo esperado
+def verificar_tipo(campo: str) -> type:
+    # verifica qual o conteúdo do campo, e instancia tipo esperado de acordo com ele
+    if campo.lower() == 'hidratacao (ml)' or campo.lower() == 'tempo sol (min)' or campo.lower() == 'atividade fisica (min)':
+        tipo_esperado = int
+    elif campo.lower() == 'sono (horas)' or  campo.lower() == 'tempo tela (horas)' or \
+    campo.lower() == 'trabalho (horas)' or campo.lower() == 'nivel estresse (1 a 10)':
+        tipo_esperado = float
+    else:
+        tipo_esperado = str
+    
+    return tipo_esperado
+
+def salvar_dados(sql: str, dados: dict) -> None:
+    executar_comando(sql, dados, fetch=False)

@@ -9,25 +9,18 @@ def conectar():
             dsn="oracle.fiap.com.br:1521/ORCL"
         )
 
-        cursors = {
-            "cadastro": connection.cursor(),
-            "consulta": connection.cursor(),
-            "alteracao": connection.cursor(),
-            "exclusao": connection.cursor()
-        }
+        cursor = connection.cursor()
     except Exception as e:
         print("Erro na conexão: ", e)
         return None, None
     else:
-        return connection, cursors
+        return connection, cursor
 
 # recebe o código sql e o tipo de cursor para fazer a operação equivalente no banco
-def executar_comando(sql, params=None, fetch=True, tipo="consulta"):
-    connection, cursors = conectar()
+def executar_comando(sql, params=None, fetch=True):
+    connection, cursor = conectar()
     if not connection:
         return None
-    
-    cursor = cursors.get(tipo, cursors["consulta"])
 
     try:
         cursor.execute(sql, params or {})
@@ -39,8 +32,7 @@ def executar_comando(sql, params=None, fetch=True, tipo="consulta"):
         print("Erro ao executar comando: ", e)
         resultado = None
     finally:
-        for cursor in cursors.values():
-            cursor.close()
+        cursor.close()
         connection.close()
     
     return resultado
