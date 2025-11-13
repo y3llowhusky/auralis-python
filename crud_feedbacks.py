@@ -20,7 +20,7 @@ def salvar_feedback(feedback: dict, id_usuario: int) -> bool:
     try:
         salvar_dados(sql, dados_feedback)
         return True
-    except Exception as e:
+    except Exception:
         return False
     
 def listar_feedbacks(id_usuario: int, nome_usuario: str) -> None:

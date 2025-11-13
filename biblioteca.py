@@ -48,7 +48,7 @@ def preencher_dicionario(dicionario: dict) -> None:
 
 # função para validar dados inseridos pelo usuário de acordo com o campo
 def validar_campo(campo: str, valor: str) -> bool:
-    match campo:
+    match campo.lower():
         case "email":
             return "@" in valor and "." in valor
         case "senha":
@@ -61,20 +61,16 @@ def validar_campo(campo: str, valor: str) -> bool:
             return verificar_data(valor)
         case "hidratacao (ml)":
             return valor >= 0 and valor <= 10000
-        case "tempo sol (min)":
+        case "tempo sol (min)" | "atividade fisica (min)":
             return valor >= 0 and valor <= 1440
         case "nivel estresse (1 a 10)":
             return valor >= 1 and valor <= 10
-        case "sono (horas)":
+        case "sono (horas)" | "tempo tela (horas)" | "trabalho (horas)":
             return valor >= 0 and valor <= 24
-        case "tempo tela (horas)":
-            return valor >= 0 and valor <= 24
-        case "trabalho (horas)":
-            return valor >= 0 and valor <= 24
-        case "atividade fisica (min)":
-            return valor >= 0 and valor <= 1440
         case "nota feedback (1 a 5)":
             return valor >= 1 and valor <= 5
+        case "receber whatsapp (s/n)" | "receber email (s/n)":
+            return len(valor) == 1 and valor.lower() in ['s', 'n']
         case _:
             return True
 

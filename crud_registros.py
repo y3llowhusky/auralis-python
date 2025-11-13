@@ -67,7 +67,7 @@ def salvar_registro(registro: dict, id_usuario: int) -> bool:
     try:
         salvar_dados(sql, dados_registro)
         return True
-    except Exception as e:
+    except Exception:
         return False
 
 def listar_registros(id_usuario: int, nome_usuario: str) -> None:

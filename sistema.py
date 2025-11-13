@@ -2,6 +2,7 @@ from biblioteca import *
 from crud_usuarios import *
 from crud_registros import *
 from crud_feedbacks import *
+from crud_inscricoes import *
 
 while True:
 
@@ -192,6 +193,42 @@ while True:
             case "5":
                 limpar_tela()
                 exibir_titulo("ativar / desativar notificações")
+
+                inscrito = verificar_inscricao(usuario_logado_id)
+
+                if not inscrito:
+                    print("Você ainda não está inscrito para receber notificações.")
+                    if input("Deseja inscrever-se? (s/n): ").strip().lower() == 's':
+                        preencher_dicionario(inscricao)
+                        if salvar_inscricao(inscricao, usuario_logado_id):
+                            print("Notificações ATIVADAS com sucesso!")
+                        else:
+                            print("Erro ao realizar inscrição.")
+                    else:
+                        print("Inscrição não realizada.")
+
+                else:
+                    if inscrito == "I":
+                        print("Suas notificações estão DESATIVADAS.")
+                        if input("Deseja ATIVÁ-LAS? (s/n): ").strip().lower() == 's':
+                            preencher_dicionario(inscricao)
+                            if atualizar_inscricao(usuario_logado_id, inscricao["receber whatsapp (s/n)"], inscricao["receber email (s/n)"], "A"):
+                                exibir_titulo("notificações ativadas com sucesso!")
+                            else:
+                                print("Erro ao atualizar inscrição.")
+                        else:
+                            print("Inscrição não alterada.")
+
+                    elif inscrito == "A":
+                        print("Suas notificações estão ATIVADAS.")
+                        if input("Deseja DESATIVÁ-LAS? (s/n): ").strip().lower() == 's':
+                            if atualizar_inscricao(usuario_logado_id, "N", "N", "I"):
+                                exibir_titulo("notificações desativadas com sucesso!")
+                            else:
+                                print("Erro ao atualizar inscrição.")
+                        else:
+                            print("Inscrição não alterada.")
+
                 input("Pressione Enter para continuar...")
 
             case "6":
