@@ -80,39 +80,42 @@ def verificar_registro_hoje(id_usuario: int) -> bool:
     return bool(resultado)
 
 def listar_registros(id_usuario: int, nome_usuario: str) -> None:
-    sql = "SELECT * FROM auralis_registros WHERE id_usuario = :1 ORDER BY data_registro DESC"
+    sql = "SELECT id_registro, id_usuario, hidratacao_ml, tempo_sol_min, nivel_estresse," \
+    "sono_horas, tempo_tela_horas, trabalho_horas, atividade_fisica_min, score, data_registro" \
+    " FROM auralis_registros WHERE id_usuario = :1 ORDER BY data_registro"
+
     dados_registro = {"1": id_usuario}
     resultado = executar_comando(sql, dados_registro, fetch=True)
 
-    print(f"Histórico de registros de {nome_usuario}")
+    print(f"Histórico de registros de {nome_usuario}\n")
 
     if not resultado:
         print("Nenhum registro encontrado.")
     else:
         registros = []
         for registro in resultado:
-            exibir_titulo(f"registro diário - {registro[11].strftime("%d/%m/%Y")}")
-            print(registro)
-            print(f"""Hidratação (ml): {registro[3]}
-Tempo ao sol: {registro[4]} min
-Nível de estresse (1 a 10): {registro[5]}
-Sono: {registro[6]} horas
-Tempo de tela: {registro[7]} horas
-Tempo de trabalho: {registro[8]} horas
-Atividade física: {registro[9]} min
-Score do dia: {registro[10]}""")
+            data = registro[10].strftime("%d/%m/%Y")
+            exibir_titulo(f"registro diário - {data}")
+            print(f"""Hidratação (ml): {registro[2]}
+Tempo ao sol: {registro[3]} min
+Nível de estresse (1 a 10): {registro[4]}
+Sono: {registro[5]} horas
+Tempo de tela: {registro[6]} horas
+Tempo de trabalho: {registro[7]} horas
+Atividade física: {registro[8]} min
+-----\nScore do dia: {registro[9]}""")
             print("")
 
             registros.append({
-                "data_registro": registro[11].strftime("%d/%m/%Y"),
-                "hidratacao_ml": registro[3],
-                "tempo_sol_min": registro[4],
-                "nivel_estresse": registro[5],
-                "sono_horas": registro[6],
-                "tempo_tela_horas": registro[7],
-                "trabalho_horas": registro[8],
-                "atividade_fisica_min": registro[9],
-                "score": registro[10]})
+                "data_registro": registro[10].strftime("%d/%m/%Y"),
+                "hidratacao_ml": registro[2],
+                "tempo_sol_min": registro[3],
+                "nivel_estresse": registro[4],
+                "sono_horas": registro[5],
+                "tempo_tela_horas": registro[6],
+                "trabalho_horas": registro[7],
+                "atividade_fisica_min": registro[8],
+                "score": registro[9]})
 
         print(f"Total de registros diários: {len(resultado)}")
         exportar = input("Deseja exportar os registros para um arquivo de texto? (s/n): ").strip().lower()

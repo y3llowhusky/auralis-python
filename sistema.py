@@ -106,6 +106,7 @@ while True:
             case "0":
                 limpar_tela()
                 exibir_titulo("saindo do sistema...")
+                input("Pressione Enter para continuar...")
                 exit()
             case _:
                 print("Opção inválida. Tente novamente.")
