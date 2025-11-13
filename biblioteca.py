@@ -97,5 +97,22 @@ def verificar_tipo(campo: str) -> type:
     
     return tipo_esperado
 
+def exportar_json(nome_arq: str, dados: list[dict]) -> None:
+    try:
+        pasta_exportacoes = "exportacoes"
+        os.makedirs(pasta_exportacoes, exist_ok=True)
+
+        caminho_arquivo = os.path.join(pasta_exportacoes, f"{nome_arq}.json")
+
+        with open(caminho_arquivo, "w", encoding="utf-8") as f:
+            json.dump(dados, f, indent=4, ensure_ascii=False)
+
+        print(f"\nDados exportados com sucesso para '{caminho_arquivo}'!\n")
+    except Exception as e:
+        print(f"Erro ao exportar dados para JSON: {e}")
+
 def salvar_dados(sql: str, dados: dict) -> None:
     executar_comando(sql, dados, fetch=False)
+
+def listar_dados(sql: str, dados: dict) -> None:
+    executar_comando(sql, dados, fetch=True)

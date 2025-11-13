@@ -1,5 +1,5 @@
 from db import executar_comando
-from biblioteca import salvar_dados
+from biblioteca import *
 from datetime import datetime
 
 registro_diario = {
@@ -78,3 +78,43 @@ def verificar_registro_hoje(id_usuario: int) -> bool:
     }
     resultado = executar_comando(sql, dados, fetch=True)
     return bool(resultado)
+
+def listar_registros(id_usuario: int, nome_usuario: str) -> None:
+    sql = "SELECT * FROM auralis_registros WHERE id_usuario = :1 ORDER BY data_registro DESC"
+    dados_registro = {"1": id_usuario}
+    resultado = executar_comando(sql, dados_registro, fetch=True)
+
+    print(f"Histórico de registros de {nome_usuario}")
+
+    if not resultado:
+        print("Nenhum registro encontrado.")
+    else:
+        registros = []
+        for registro in resultado:
+            exibir_titulo(f"registro diário - {registro[11].strftime("%d/%m/%Y")}")
+            print(registro)
+            print(f"""Hidratação (ml): {registro[3]}
+Tempo ao sol: {registro[4]} min
+Nível de estresse (1 a 10): {registro[5]}
+Sono: {registro[6]} horas
+Tempo de tela: {registro[7]} horas
+Tempo de trabalho: {registro[8]} horas
+Atividade física: {registro[9]} min
+Score do dia: {registro[10]}""")
+            print("")
+
+            registros.append({
+                "data_registro": registro[11].strftime("%d/%m/%Y"),
+                "hidratacao_ml": registro[3],
+                "tempo_sol_min": registro[4],
+                "nivel_estresse": registro[5],
+                "sono_horas": registro[6],
+                "tempo_tela_horas": registro[7],
+                "trabalho_horas": registro[8],
+                "atividade_fisica_min": registro[9],
+                "score": registro[10]})
+
+        print(f"Total de registros diários: {len(resultado)}")
+        exportar = input("Deseja exportar os registros para um arquivo de texto? (s/n): ").strip().lower()
+        if exportar == "s":
+            exportar_json("historico_registros", registros)

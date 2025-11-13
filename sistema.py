@@ -79,6 +79,11 @@ while True:
                         break
                     usuario_logado_id = verificar_login(email, senha)
                     if usuario_logado_id:
+                        usuario["nome"] = executar_comando(
+                            "SELECT nome_usuario FROM auralis_usuarios WHERE id_usuario = :1",
+                            {"1": usuario_logado_id},
+                            fetch=True
+                        )[0][0]
                         exibir_titulo("login bem-sucedido!")
                         logando = False
                         executa_programa = True
@@ -152,6 +157,7 @@ while True:
             case "2":
                 limpar_tela()
                 exibir_titulo("visualizar histórico de registros")
+                listar_registros(usuario_logado_id, usuario["nome"])
                 input("Pressione Enter para continuar...")
 
             case "3":
