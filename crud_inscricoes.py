@@ -1,5 +1,6 @@
 from db import executar_comando
-from biblioteca import salvar_dados
+from biblioteca import *
+from datetime import datetime
 
 inscricao = {
     "recebe whatsapp": None,

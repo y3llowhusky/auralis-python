@@ -186,6 +186,7 @@ while True:
             case "4":
                 limpar_tela()
                 exibir_titulo("visualizar histórico de feedbacks")
+                listar_feedbacks(usuario_logado_id, usuario["nome"])
                 input("Pressione Enter para continuar...")
 
             case "5":

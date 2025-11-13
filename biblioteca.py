@@ -119,9 +119,6 @@ def exportar_json(nome_arq: str, dados: list[dict]) -> None:
 def salvar_dados(sql: str, dados: dict) -> None:
     executar_comando(sql, dados, fetch=False)
 
-def listar_dados(sql: str, dados: dict) -> None:
-    executar_comando(sql, dados, fetch=True)
-
 def verificar_cadastro_hoje(id_usuario: int, tabela: str) -> bool:
     sql = f"SELECT * FROM auralis_{tabela}s WHERE id_usuario = :1 AND data_{tabela} = TO_DATE(:2, 'DD/MM/YYYY')"
     dados = {

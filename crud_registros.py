@@ -87,7 +87,7 @@ def listar_registros(id_usuario: int, nome_usuario: str) -> None:
         for registro in resultado:
             data = registro[10].strftime("%d/%m/%Y")
             exibir_titulo(f"registro diário - {data}")
-            print(f"""Hidratação (ml): {registro[2]}
+            print(f"""Hidratação: {registro[2]} ml
 Tempo ao sol: {registro[3]} min
 Nível de estresse (1 a 10): {registro[4]}
 Sono: {registro[5]} horas
@@ -98,7 +98,7 @@ Atividade física: {registro[8]} min
             print("")
 
             registros.append({
-                "data_registro": registro[10].strftime("%d/%m/%Y"),
+                "data_registro": data,
                 "hidratacao_ml": registro[2],
                 "tempo_sol_min": registro[3],
                 "nivel_estresse": registro[4],
@@ -108,7 +108,7 @@ Atividade física: {registro[8]} min
                 "atividade_fisica_min": registro[8],
                 "score": registro[9]})
 
-        print(f"Total de registros diários: {len(resultado)}")
+        print(f"=====\nTotal de registros diários: {len(resultado)}\n=====")
         exportar = input("Deseja exportar os registros para um arquivo de texto? (s/n): ").strip().lower()
         if exportar == "s":
             exportar_json("historico_registros", registros)
