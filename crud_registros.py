@@ -70,15 +70,6 @@ def salvar_registro(registro: dict, id_usuario: int) -> bool:
     except Exception as e:
         return False
 
-def verificar_registro_hoje(id_usuario: int) -> bool:
-    sql = "SELECT * FROM auralis_registros WHERE id_usuario = :1 AND data_registro = TO_DATE(:2, 'DD/MM/YYYY')"
-    dados = {
-        "1": id_usuario,
-        "2": datetime.now().strftime("%d/%m/%Y")
-    }
-    resultado = executar_comando(sql, dados, fetch=True)
-    return bool(resultado)
-
 def listar_registros(id_usuario: int, nome_usuario: str) -> None:
     sql = "SELECT id_registro, id_usuario, hidratacao_ml, tempo_sol_min, nivel_estresse," \
     "sono_horas, tempo_tela_horas, trabalho_horas, atividade_fisica_min, score, data_registro" \

@@ -24,10 +24,13 @@ while True:
 
         match opcao:
             case "1":
+                # cadastro de novo usuário - não usa função preencher_dicionario por ter validações específicas, assim não interrompe o fluxo de cadastro
+                # caso algum campo não seja válido
                 cadastrando = True
                 while cadastrando:
                     limpar_tela()
                     exibir_titulo("cadastrar novo usuário")
+
                     email = input("Email (deixe em branco para voltar): ")
                     if email.strip() == "":
                         break
@@ -39,21 +42,25 @@ while True:
                         print("Erro: Já existe um usuário cadastrado com esse email!")
                         input("\nPressione Enter para continuar...")
                         continue
+
                     senha = input("Senha: ")
                     if not validar_campo("senha", senha):
                         print("Erro: Senha inválida. A senha deve ter pelo menos 6 caracteres.")
                         input("\nPressione Enter para continuar...")
                         continue
+
                     nome_usuario = input("Nome: ")
                     if not validar_campo("nome", nome_usuario):
                         print("Erro: Nome inválido. O nome deve ter pelo menos 2 caracteres.")
                         input("\nPressione Enter para continuar...")
                         continue
+
                     genero = input("Gênero ( [M]asculino, [F]eminino, [O]utro ): ")
                     if not validar_campo("genero", genero):
                         print("Erro: Gênero inválido. Use M, F ou O.")
                         input("\nPressione Enter para continuar...")
                         continue
+
                     data_nascimento = "placeholder"
                     while not validar_campo("data_nascimento", data_nascimento):
                         data_nascimento = input("Data de Nascimento (DD/MM/AAAA): ")
@@ -131,7 +138,7 @@ while True:
             case "1":
                 limpar_tela()
                 exibir_titulo("adicionar registro diário")
-                if verificar_registro_hoje(usuario_logado_id):
+                if verificar_cadastro_hoje(usuario_logado_id, "registro"):
                     print("Você já adicionou um registro diário hoje. Volte amanhã para manter sua consistência!")
                     input("Pressione Enter para continuar...")
                     continue
@@ -164,6 +171,16 @@ while True:
             case "3":
                 limpar_tela()
                 exibir_titulo("enviar feedback")
+                if verificar_cadastro_hoje(usuario_logado_id, "feedback"):
+                    print("Você já enviou um feedback hoje. Só é possível enviar um feedback por dia.")
+                    input("Pressione Enter para continuar...")
+                    continue
+                else:
+                    preencher_dicionario(feedback)
+                    if salvar_feedback(feedback, usuario_logado_id):
+                        print("Feedback enviado com sucesso! Agradecemos sua contribuição para melhorar nosso sistema.")
+                    else:
+                        print("Erro ao enviar feedback.")
                 input("Pressione Enter para continuar...")
 
             case "4":

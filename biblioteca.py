@@ -13,44 +13,6 @@ def exibir_titulo(title: str) -> None:
     print("=" * largura)
     print(title.center(largura).upper())
     print("=" * largura)
-
-# função para verificar se data está em formato e intervalo válidos
-def verificar_data(data_texto: str) -> bool:
-    try:
-        data_valida = datetime.strptime(data_texto, "%d/%m/%Y")
-        if data_valida < datetime.now() and data_valida.year > 1900:
-            return True
-        return False
-    except ValueError:
-        return False
-
-# função para validar dados inseridos pelo usuário de acordo com o campo
-def validar_campo(campo: str, valor: str) -> bool:
-    match campo:
-        case "email":
-            return "@" in valor and "." in valor
-        case "senha":
-            return len(valor) >= 6
-        case "nome":
-            return len(valor) > 1
-        case "genero":
-            return valor.upper() in ["M", "F", "O"]
-        case "data_nascimento":
-            return verificar_data(valor)
-        case "hidratacao (ml)":
-            return valor >= 0 and valor <= 10000
-        case "tempo sol (min)":
-            return valor >= 0 and valor <= 1440
-        case "nivel estresse (1 a 10)":
-            return valor >= 1 and valor <= 10
-        case "sono (horas)":
-            return valor >= 0 and valor <= 24
-        case "tempo tela (horas)":
-            return valor >= 0 and valor <= 24
-        case "trabalho (horas)":
-            return valor >= 0 and valor <= 24
-        case "atividade fisica (min)":
-            return valor >= 0 and valor <= 1440
         
 # procedimento para preencher um dicionario e adiciona-lo a lista de dicionarios
 def preencher_dicionario(dicionario: dict) -> None:
@@ -84,10 +46,53 @@ def preencher_dicionario(dicionario: dict) -> None:
         # atribui conteudo do campo ao valor do item no dicionario
         dicionario[campo] = valor
 
+# função para validar dados inseridos pelo usuário de acordo com o campo
+def validar_campo(campo: str, valor: str) -> bool:
+    match campo:
+        case "email":
+            return "@" in valor and "." in valor
+        case "senha":
+            return len(valor) >= 6
+        case "nome":
+            return len(valor) > 1
+        case "genero":
+            return valor.upper() in ["M", "F", "O"]
+        case "data_nascimento":
+            return verificar_data(valor)
+        case "hidratacao (ml)":
+            return valor >= 0 and valor <= 10000
+        case "tempo sol (min)":
+            return valor >= 0 and valor <= 1440
+        case "nivel estresse (1 a 10)":
+            return valor >= 1 and valor <= 10
+        case "sono (horas)":
+            return valor >= 0 and valor <= 24
+        case "tempo tela (horas)":
+            return valor >= 0 and valor <= 24
+        case "trabalho (horas)":
+            return valor >= 0 and valor <= 24
+        case "atividade fisica (min)":
+            return valor >= 0 and valor <= 1440
+        case "nota feedback (1 a 5)":
+            return valor >= 1 and valor <= 5
+        case _:
+            return True
+
+# função para verificar se data está em formato e intervalo válidos
+def verificar_data(data_texto: str) -> bool:
+    try:
+        data_valida = datetime.strptime(data_texto, "%d/%m/%Y")
+        if data_valida < datetime.now() and data_valida.year > 1900:
+            return True
+        return False
+    except ValueError:
+        return False
+
 # função para verificar o tipo esperado do conteúdo de um campo, retorna o tipo esperado
 def verificar_tipo(campo: str) -> type:
     # verifica qual o conteúdo do campo, e instancia tipo esperado de acordo com ele
-    if campo.lower() == 'hidratacao (ml)' or campo.lower() == 'tempo sol (min)' or campo.lower() == 'atividade fisica (min)':
+    if campo.lower() == 'hidratacao (ml)' or campo.lower() == 'tempo sol (min)' or campo.lower() == 'atividade fisica (min)' or \
+    campo.lower() == 'nota feedback (1 a 5)':
         tipo_esperado = int
     elif campo.lower() == 'sono (horas)' or  campo.lower() == 'tempo tela (horas)' or \
     campo.lower() == 'trabalho (horas)' or campo.lower() == 'nivel estresse (1 a 10)':
@@ -116,3 +121,12 @@ def salvar_dados(sql: str, dados: dict) -> None:
 
 def listar_dados(sql: str, dados: dict) -> None:
     executar_comando(sql, dados, fetch=True)
+
+def verificar_cadastro_hoje(id_usuario: int, tabela: str) -> bool:
+    sql = f"SELECT * FROM auralis_{tabela}s WHERE id_usuario = :1 AND data_{tabela} = TO_DATE(:2, 'DD/MM/YYYY')"
+    dados = {
+        "1": id_usuario,
+        "2": datetime.now().strftime("%d/%m/%Y")
+    }
+    resultado = executar_comando(sql, dados, fetch=True)
+    return bool(resultado)
