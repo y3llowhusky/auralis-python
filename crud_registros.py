@@ -48,20 +48,22 @@ def calcular_score(dados: dict) -> int:
     return round(max(0, min(score, 100)))
 
 def salvar_registro(registro: dict, id_usuario: int) -> bool:
-    sql = """INSERT INTO auralis_registros (id_usuario, hidratacao_ml, tempo_sol_min, nivel_estresse, sono_horas, tempo_tela_horas, 
-            trabalho_horas, atividade_fisica_min, score, data_registro) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, TO_DATE(:10, 'DD/MM/YYYY'))"""
+    sql = """INSERT INTO auralis_registros (id_usuario, hidratacao_ml, tempo_sol_min, nivel_estresse, 
+            sono_horas, tempo_tela_horas, trabalho_horas, atividade_fisica_min, score, data_registro) VALUES 
+            (:id_usuario, :hidratacao_ml, :tempo_sol_min, :nivel_estresse, :sono_horas, :tempo_tela_horas, :trabalho_horas, 
+            :atividade_fisica_min, :score, TO_DATE(:data_registro, 'DD/MM/YYYY'))"""
     
     dados_registro = {
-        "1": id_usuario,
-        "2": registro["hidratacao (ml)"],
-        "3": registro["tempo sol (min)"],
-        "4": registro["nivel estresse (1 a 10)"],
-        "5": registro["sono (horas)"],
-        "6": registro["tempo tela (horas)"],
-        "7": registro["trabalho (horas)"],
-        "8": registro["atividade fisica (min)"],
-        "9": calcular_score(registro),
-        "10": datetime.now().strftime("%d/%m/%Y")
+        "id_usuario": id_usuario,
+        "hidratacao_ml": registro["hidratacao (ml)"],
+        "tempo_sol_min": registro["tempo sol (min)"],
+        "nivel_estresse": registro["nivel estresse (1 a 10)"],
+        "sono_horas": registro["sono (horas)"],
+        "tempo_tela_horas": registro["tempo tela (horas)"],
+        "trabalho_horas": registro["trabalho (horas)"],
+        "atividade_fisica_min": registro["atividade fisica (min)"],
+        "score": calcular_score(registro),
+        "data_registro": datetime.now().strftime("%d/%m/%Y")
     }
 
     try:
@@ -73,9 +75,9 @@ def salvar_registro(registro: dict, id_usuario: int) -> bool:
 def listar_registros(id_usuario: int, nome_usuario: str) -> None:
     sql = "SELECT id_registro, id_usuario, hidratacao_ml, tempo_sol_min, nivel_estresse," \
     "sono_horas, tempo_tela_horas, trabalho_horas, atividade_fisica_min, score, data_registro" \
-    " FROM auralis_registros WHERE id_usuario = :1 ORDER BY data_registro"
+    " FROM auralis_registros WHERE id_usuario = :id_usuario ORDER BY data_registro"
 
-    dados_registro = {"1": id_usuario}
+    dados_registro = {"id_usuario": id_usuario}
     resultado = executar_comando(sql, dados_registro, fetch=True)
 
     print(f"Histórico de registros de {nome_usuario}\n")

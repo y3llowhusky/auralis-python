@@ -51,6 +51,8 @@ def validar_campo(campo: str, valor: str) -> bool:
     match campo.lower():
         case "email":
             return "@" in valor and "." in valor
+        case "telefone":
+            return valor.isdigit() and 10 <= len(valor) <= 11
         case "senha":
             return len(valor) >= 6
         case "nome":
@@ -116,10 +118,10 @@ def salvar_dados(sql: str, dados: dict) -> None:
     executar_comando(sql, dados, fetch=False)
 
 def verificar_cadastro_hoje(id_usuario: int, tabela: str) -> bool:
-    sql = f"SELECT * FROM auralis_{tabela}s WHERE id_usuario = :1 AND data_{tabela} = TO_DATE(:2, 'DD/MM/YYYY')"
+    sql = f"SELECT * FROM auralis_{tabela}s WHERE id_usuario = :id_usuario AND data_{tabela} = TO_DATE(:data, 'DD/MM/YYYY')"
     dados = {
-        "1": id_usuario,
-        "2": datetime.now().strftime("%d/%m/%Y")
+        "id_usuario": id_usuario,
+        "data": datetime.now().strftime("%d/%m/%Y")
     }
     resultado = executar_comando(sql, dados, fetch=True)
     return bool(resultado)

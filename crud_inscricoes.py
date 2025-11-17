@@ -16,13 +16,13 @@ def verificar_inscricao(id_usuario: int):
 
 def salvar_inscricao(inscricao: dict, id_usuario: int) -> bool:
     sql = """INSERT INTO auralis_inscricoes (id_usuario, recebe_whatsapp, recebe_email, status) 
-            VALUES (:1, :2, :3, :4)"""
+            VALUES (:id_usuario, :recebe_whatsapp, :recebe_email, :status)"""
     
     dados_inscricao = {
-        "1": id_usuario,
-        "2": inscricao["receber whatsapp (s/n)"].upper(),
-        "3": inscricao["receber email (s/n)"].upper(),
-        "4": "A"
+        "id_usuario": id_usuario,
+        "recebe_whatsapp": inscricao["receber whatsapp (s/n)"].upper(),
+        "recebe_email": inscricao["receber email (s/n)"].upper(),
+        "status": "A"
     }
 
     try:

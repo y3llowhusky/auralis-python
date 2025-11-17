@@ -44,6 +44,12 @@ while True:
                         input("\nPressione Enter para continuar...")
                         continue
 
+                    telefone = input("Telefone (com DDD, someone núm.): ")
+                    if not validar_campo("telefone", telefone):
+                        print("Erro: Telefone inválido. Use apenas números, incluindo o DDD.")
+                        input("\nPressione Enter para continuar...")
+                        continue
+
                     senha = input("Senha: ")
                     if not validar_campo("senha", senha):
                         print("Erro: Senha inválida. A senha deve ter pelo menos 6 caracteres.")
@@ -56,7 +62,7 @@ while True:
                         input("\nPressione Enter para continuar...")
                         continue
 
-                    genero = input("Gênero ( [M]asculino, [F]eminino, [O]utro ): ")
+                    genero = input("Gênero ( [M]asculino, [F]eminino, [O]utro ): ").upper()
                     if not validar_campo("genero", genero):
                         print("Erro: Gênero inválido. Use M, F ou O.")
                         input("\nPressione Enter para continuar...")
@@ -69,7 +75,7 @@ while True:
                             print("Erro: Data de nascimento inválida.")
                             input("\nPressione Enter para continuar...")
 
-                    if cadastrar_usuario(email, senha, nome_usuario, genero, data_nascimento):
+                    if cadastrar_usuario(email, telefone, senha, nome_usuario, genero, data_nascimento):
                         print("Usuário cadastrado com sucesso!")
                         cadastrando = False
                     else:
@@ -87,11 +93,9 @@ while True:
                         break
                     usuario_logado_id = verificar_login(email, senha)
                     if usuario_logado_id:
-                        usuario["nome"] = executar_comando(
-                            "SELECT nome_usuario FROM auralis_usuarios WHERE id_usuario = :1",
-                            {"1": usuario_logado_id},
-                            fetch=True
-                        )[0][0]
+                        usuario["nome"] = executar_comando("SELECT nome_usuario FROM auralis_usuarios WHERE id_usuario = :id_usuario", 
+                                                           {"id_usuario": usuario_logado_id}, fetch=True)[0][0]
+                        
                         exibir_titulo("login bem-sucedido!")
                         logando = False
                         executa_programa = True

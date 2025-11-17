@@ -8,13 +8,14 @@ feedback = {
 }
 
 def salvar_feedback(feedback: dict, id_usuario: int) -> bool:
-    sql = """INSERT INTO auralis_feedbacks (id_usuario, mensagem, nota_feedback, data_feedback) VALUES (:1, :2, :3, TO_DATE(:4, 'DD/MM/YYYY'))"""
+    sql = """INSERT INTO auralis_feedbacks (id_usuario, mensagem, nota_feedback, data_feedback) VALUES 
+    (:id_usuario, :mensagem, :nota_feedback, TO_DATE(:data_feedback, 'DD/MM/YYYY'))"""
     
     dados_feedback = {
-        "1": id_usuario,
-        "2": feedback["mensagem"],
-        "3": feedback["nota feedback (1 a 5)"],
-        "4": datetime.now().strftime("%d/%m/%Y"),
+        "id_usuario": id_usuario,
+        "mensagem": feedback["mensagem"],
+        "nota_feedback": feedback["nota feedback (1 a 5)"],
+        "data_feedback": datetime.now().strftime("%d/%m/%Y"),
     }
 
     try:
@@ -24,9 +25,9 @@ def salvar_feedback(feedback: dict, id_usuario: int) -> bool:
         return False
     
 def listar_feedbacks(id_usuario: int, nome_usuario: str) -> None:
-    sql = "SELECT * FROM auralis_feedbacks WHERE id_usuario = :1 ORDER BY data_feedback"
+    sql = "SELECT * FROM auralis_feedbacks WHERE id_usuario = :id_usuario ORDER BY data_feedback"
 
-    dados_feedback = {"1": id_usuario}
+    dados_feedback = {"id_usuario": id_usuario}
     resultado = executar_comando(sql, dados_feedback, fetch=True)
 
     print(f"Histórico de feedbacks de {nome_usuario}\n")
@@ -47,7 +48,7 @@ Mensagem: {feedback[2]}""")
                 "mensagem": feedback[2],
                 "nota_feedback": feedback[3],})
 
-        print(f"=====\nTotal de registros diários: {len(resultado)}\n=====")
+        print(f"=====\nTotal de feedbacks: {len(resultado)}\n=====")
         exportar = input("Deseja exportar os feedbacks para um arquivo de texto? (s/n): ").strip().lower()
         if exportar == "s":
             exportar_json("historico_feedbacks", feedbacks)
